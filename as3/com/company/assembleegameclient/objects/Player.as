@@ -982,6 +982,9 @@ package com.company.assembleegameclient.objects{
         }
 
         public function isInventoryFull():Boolean{
+            if (equipment_ == null){
+                return (false);
+            };
             var _local1:int = equipment_.length;
             var _local2:uint = 4;
             while (_local2 < _local1) {

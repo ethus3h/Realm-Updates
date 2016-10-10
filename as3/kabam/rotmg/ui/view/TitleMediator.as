@@ -69,6 +69,10 @@ package kabam.rotmg.ui.view{
             this.view.accountClicked.add(this.handleIntentionToReviewAccount);
             this.view.legendsClicked.add(this.showLegendsScreen);
             this.view.supportClicked.add(this.openSupportPage);
+            if (this.playerModel.isNewToEditing()){
+                this.view.putNoticeTagToOption(ButtonFactory.getEditorButton(), "new");
+            };
+            this.view.kabamTransferClicked.add(this.openKabamTransferView);
             if (this.securityQuestionsModel.showSecurityQuestionsOnStartup){
                 this.openDialog.dispatch(new SecurityQuestionsInfoDialog());
             };
@@ -123,7 +127,7 @@ package kabam.rotmg.ui.view{
         private function makeEnvironmentData():EnvironmentData{
             var _local1:EnvironmentData = new EnvironmentData();
             _local1.isDesktop = (Capabilities.playerType == "Desktop");
-            _local1.isAdmin = this.playerModel.isAdmin();
+            _local1.canMapEdit = ((this.playerModel.isAdmin()) || (this.playerModel.mapEditor()));
             _local1.buildLabel = this.setup.getBuildLabel();
             return (_local1);
         }

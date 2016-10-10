@@ -11,10 +11,12 @@ package com.company.assembleegameclient.mapeditor{
 
         public var types_:Vector.<int>;
         public var objName_:String = null;
+        public var layerNumber:int;
 
         public function METile(){
             this.types_ = new <int>[-1, -1, -1];
             super();
+            this.layerNumber = 0;
         }
 
         public function clone():METile{

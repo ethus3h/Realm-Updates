@@ -26,6 +26,7 @@ package kabam.rotmg.messaging.impl{
     import kabam.rotmg.arena.control.ImminentArenaWaveSignal;
     import kabam.rotmg.questrewards.controller.QuestFetchCompleteSignal;
     import kabam.rotmg.questrewards.controller.QuestRedeemCompleteSignal;
+    import com.company.assembleegameclient.game.events.KeyInfoResponseSignal;
     import kabam.rotmg.arena.model.CurrentArenaRunModel;
     import kabam.rotmg.classes.model.ClassesModel;
     import org.swiftsuspenders.Injector;
@@ -83,6 +84,7 @@ package kabam.rotmg.messaging.impl{
     import kabam.rotmg.messaging.impl.outgoing.arena.EnterArena;
     import kabam.rotmg.messaging.impl.outgoing.OutgoingMessage;
     import kabam.rotmg.messaging.impl.outgoing.arena.QuestRedeem;
+    import kabam.rotmg.messaging.impl.outgoing.KeyInfoRequest;
     import kabam.rotmg.messaging.impl.incoming.Failure;
     import kabam.rotmg.messaging.impl.incoming.CreateSuccess;
     import kabam.rotmg.messaging.impl.incoming.ServerPlayerShoot;
@@ -126,6 +128,7 @@ package kabam.rotmg.messaging.impl{
     import kabam.rotmg.messaging.impl.incoming.PasswordPrompt;
     import kabam.rotmg.messaging.impl.incoming.QuestFetchResponse;
     import kabam.rotmg.messaging.impl.incoming.QuestRedeemResponse;
+    import kabam.rotmg.messaging.impl.incoming.KeyInfoResponse;
     import kabam.rotmg.pets.controller.HatchPetSignal;
     import kabam.rotmg.pets.controller.DeletePetSignal;
     import kabam.rotmg.pets.controller.NewAbilitySignal;
@@ -251,6 +254,7 @@ package kabam.rotmg.messaging.impl{
         private var imminentWave:ImminentArenaWaveSignal;
         private var questFetchComplete:QuestFetchCompleteSignal;
         private var questRedeemComplete:QuestRedeemCompleteSignal;
+        private var keyInfoResponse:KeyInfoResponseSignal;
         private var currentArenaRun:CurrentArenaRunModel;
         private var classesModel:ClassesModel;
         private var injector:Injector;
@@ -278,6 +282,7 @@ package kabam.rotmg.messaging.impl{
             this.imminentWave = this.injector.getInstance(ImminentArenaWaveSignal);
             this.questFetchComplete = this.injector.getInstance(QuestFetchCompleteSignal);
             this.questRedeemComplete = this.injector.getInstance(QuestRedeemCompleteSignal);
+            this.keyInfoResponse = this.injector.getInstance(KeyInfoResponseSignal);
             this.logger = this.injector.getInstance(ILogger);
             this.handleDeath = this.injector.getInstance(HandleDeathSignal);
             this.zombify = this.injector.getInstance(ZombifySignal);
@@ -385,6 +390,7 @@ package kabam.rotmg.messaging.impl{
             _local1.map(ACCEPT_ARENA_DEATH).toMessage(OutgoingMessage);
             _local1.map(QUEST_FETCH_ASK).toMessage(OutgoingMessage);
             _local1.map(QUEST_REDEEM).toMessage(QuestRedeem);
+            _local1.map(KEY_INFO_REQUEST).toMessage(KeyInfoRequest);
             _local1.map(PET_CHANGE_FORM_MSG).toMessage(ReskinPet);
             _local1.map(FAILURE).toMessage(Failure).toMethod(this.onFailure);
             _local1.map(CREATE_SUCCESS).toMessage(CreateSuccess).toMethod(this.onCreateSuccess);
@@ -432,6 +438,7 @@ package kabam.rotmg.messaging.impl{
             _local1.map(PASSWORD_PROMPT).toMessage(PasswordPrompt).toMethod(this.onPasswordPrompt);
             _local1.map(QUEST_FETCH_RESPONSE).toMessage(QuestFetchResponse).toMethod(this.onQuestFetchResponse);
             _local1.map(QUEST_REDEEM_RESPONSE).toMessage(QuestRedeemResponse).toMethod(this.onQuestRedeemResponse);
+            _local1.map(KEY_INFO_RESPONSE).toMessage(KeyInfoResponse).toMethod(this.onKeyInfoResponse);
         }
 
         private function onHatchPet(_arg1:HatchPetMessage):void{
@@ -730,8 +737,14 @@ package kabam.rotmg.messaging.impl{
         }
 
         override public function useItem_new(_arg1:GameObject, _arg2:int):Boolean{
+            var _local4:XML;
             var _local3:int = _arg1.equipment_[_arg2];
-            var _local4:XML = ObjectLibrary.xmlLibrary_[_local3];
+            if (_local3 >= 0x9000){
+                _local4 = ObjectLibrary.xmlLibrary_[36863];
+            }
+            else {
+                _local4 = ObjectLibrary.xmlLibrary_[_local3];
+            };
             if (((((_local4) && (!(_arg1.isPaused())))) && (((_local4.hasOwnProperty("Consumable")) || (_local4.hasOwnProperty("InvUse")))))){
                 if (!this.validStatInc(_local3, _arg1)){
                     this.addTextLine.dispatch(ChatMessage.make("", (_local4.attribute("id") + " not consumed. Already at Max.")));
@@ -1950,6 +1963,16 @@ package kabam.rotmg.messaging.impl{
             _local4.slotObject.slotId_ = _arg2;
             _local4.slotObject.objectType_ = _arg3;
             serverConnection.sendMessage(_local4);
+        }
+
+        override public function keyInfoRequest(_arg1:int):void{
+            var _local2:KeyInfoRequest = (this.messages.require(KEY_INFO_REQUEST) as KeyInfoRequest);
+            _local2.itemType_ = _arg1;
+            serverConnection.sendMessage(_local2);
+        }
+
+        private function onKeyInfoResponse(_arg1:KeyInfoResponse):void{
+            this.keyInfoResponse.dispatch(_arg1);
         }
 
         private function onClosed():void{

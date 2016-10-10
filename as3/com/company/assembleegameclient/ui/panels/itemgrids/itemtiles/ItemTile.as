@@ -80,8 +80,12 @@ package com.company.assembleegameclient.ui.panels.itemgrids.itemtiles{
         }
 
         public function updateUseability(_arg1:Player):void{
+            var _local2:int = this.itemSprite.itemId;
+            if (_local2 >= 0x9000){
+                _local2 = 36863;
+            };
             if (this.itemSprite.itemId != ItemConstants.NO_ITEM){
-                this.restrictedUseIndicator.visible = !(ObjectLibrary.isUsableByPlayer(this.itemSprite.itemId, _arg1));
+                this.restrictedUseIndicator.visible = !(ObjectLibrary.isUsableByPlayer(_local2, _arg1));
             }
             else {
                 this.restrictedUseIndicator.visible = false;
@@ -97,6 +101,9 @@ package com.company.assembleegameclient.ui.panels.itemgrids.itemtiles{
         }
 
         public function getItemId():int{
+            if (this.itemSprite.itemId >= 0x9000){
+                return (36863);
+            };
             return (this.itemSprite.itemId);
         }
 

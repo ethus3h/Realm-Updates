@@ -36,11 +36,7 @@ package kabam.rotmg.account.web.services{
         }
 
         private function updateUser(_arg1:String):void{
-            var _local2:XML = new XML(_arg1);
-            if (_local2.hasOwnProperty("token")){
-                this.data.token = _local2.token;
-                this.account.updateUser(this.data.username, this.data.password, _local2.token);
-            };
+            this.account.updateUser(this.data.username, this.data.password, "");
         }
 
 

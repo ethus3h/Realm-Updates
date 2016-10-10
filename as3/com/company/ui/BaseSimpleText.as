@@ -87,6 +87,11 @@ package com.company.ui{
             this.text = _arg1;
         }
 
+        public function setMultiLine(_arg1:Boolean):void{
+            multiline = _arg1;
+            wordWrap = _arg1;
+        }
+
         private function applyFormat(_arg1:TextFormat):void{
             setTextFormat(_arg1);
             defaultTextFormat = _arg1;

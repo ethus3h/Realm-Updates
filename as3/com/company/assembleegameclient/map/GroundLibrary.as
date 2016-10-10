@@ -18,6 +18,7 @@ package com.company.assembleegameclient.map{
         private static var tileTypeColorDict_:Dictionary = new Dictionary();
         public static var idToType_:Dictionary = new Dictionary();
         public static var defaultProps_:GroundProperties;
+        public static var GROUND_CATEGORY:String = "Ground";
 
 
         public static function parseFromXML(_arg1:XML):void{

@@ -25,15 +25,15 @@ package com.company.assembleegameclient.mapeditor{
     class Chooser extends Sprite {
 
         public static const WIDTH:int = 136;
-        public static const HEIGHT:int = 480;
+        public static const HEIGHT:int = 430;
         private static const SCROLLBAR_WIDTH:int = 20;
 
         private const graphicsData_:Vector.<IGraphicsData> = new <flash.display.IGraphicsData>[Chooser.lineStyle_, Chooser.backgroundFill_, Chooser.path_, com.company.util.GraphicsUtil.END_FILL, com.company.util.GraphicsUtil.END_STROKE];
 
         public var layer_:int;
-        private var elementSprite_:Sprite;
         public var selected_:Element;
-        private var scrollBar_:Scrollbar;
+        protected var elementSprite_:Sprite;
+        protected var scrollBar_:Scrollbar;
         private var mask_:Shape;
         private var elements_:Vector.<Element>;
         private var outlineFill_:GraphicsSolidFill;
@@ -92,6 +92,20 @@ package com.company.assembleegameclient.mapeditor{
             };
             _arg1.addEventListener(MouseEvent.MOUSE_DOWN, this.onMouseDown);
             this.elements_.push(_arg1);
+        }
+
+        protected function removeElements():void{
+            this.elements_ = new Vector.<Element>();
+            removeChild(this.elementSprite_);
+            this.elementSprite_ = new Sprite();
+            this.elementSprite_.x = 4;
+            this.elementSprite_.y = 6;
+            var _local1:Shape = new Shape();
+            _local1.graphics.beginFill(0);
+            _local1.graphics.drawRect(0, 2, ((Chooser.WIDTH - SCROLLBAR_WIDTH) - 4), (Chooser.HEIGHT - 4));
+            addChild(_local1);
+            this.elementSprite_.mask = _local1;
+            addChild(this.elementSprite_);
         }
 
         protected function onMouseDown(_arg1:MouseEvent):void{

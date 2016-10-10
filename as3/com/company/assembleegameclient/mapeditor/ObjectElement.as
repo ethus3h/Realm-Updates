@@ -5,9 +5,11 @@
 
 package com.company.assembleegameclient.mapeditor{
     import com.company.assembleegameclient.mapeditor.Element;
+    import com.company.assembleegameclient.objects.animation.Animations;
     import flash.display.Bitmap;
-    import com.company.assembleegameclient.objects.ObjectLibrary;
     import flash.display.BitmapData;
+    import com.company.assembleegameclient.objects.ObjectLibrary;
+    import com.company.assembleegameclient.objects.animation.AnimationsData;
     import com.company.assembleegameclient.mapeditor.ObjectTypeToolTip;
     import com.company.assembleegameclient.ui.tooltip.ToolTip;
     import com.company.assembleegameclient.mapeditor.*;
@@ -17,16 +19,26 @@ package com.company.assembleegameclient.mapeditor{
         public var objXML_:XML;
 
         public function ObjectElement(_arg1:XML){
-            var _local3:Bitmap;
+            var _local3:Animations;
+            var _local5:Bitmap;
+            var _local7:BitmapData;
             super(int(_arg1.@type));
             this.objXML_ = _arg1;
             var _local2:BitmapData = ObjectLibrary.getRedrawnTextureFromType(type_, 100, true, false);
-            _local3 = new Bitmap(_local2);
-            var _local4:Number = ((WIDTH - 4) / Math.max(_local3.width, _local3.height));
-            _local3.scaleX = (_local3.scaleY = _local4);
-            _local3.x = ((WIDTH / 2) - (_local3.width / 2));
-            _local3.y = ((HEIGHT / 2) - (_local3.height / 2));
-            addChild(_local3);
+            var _local4:AnimationsData = ObjectLibrary.typeToAnimationsData_[int(_arg1.@type)];
+            if (_local4 != null){
+                _local3 = new Animations(_local4);
+                _local7 = _local3.getTexture(0.4);
+                if (_local7 != null){
+                    _local2 = _local7;
+                };
+            };
+            _local5 = new Bitmap(_local2);
+            var _local6:Number = ((WIDTH - 4) / Math.max(_local5.width, _local5.height));
+            _local5.scaleX = (_local5.scaleY = _local6);
+            _local5.x = ((WIDTH / 2) - (_local5.width / 2));
+            _local5.y = ((HEIGHT / 2) - (_local5.height / 2));
+            addChild(_local5);
         }
 
         override protected function getToolTip():ToolTip{

@@ -18,7 +18,7 @@ package kabam.rotmg.account.web{
 
         private var userId:String = "";
         private var password:String;
-        private var token:String;
+        private var token:String = "";
         private var entryTag:String = "";
         private var isVerifiedEmail:Boolean;
         private var platformToken:String;
@@ -48,7 +48,7 @@ package kabam.rotmg.account.web{
         }
 
         public function getToken():String{
-            return (((this.token) || ("")));
+            return ("");
         }
 
         public function getCredentials():Object{

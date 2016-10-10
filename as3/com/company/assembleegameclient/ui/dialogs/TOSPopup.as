@@ -19,14 +19,18 @@ package com.company.assembleegameclient.ui.dialogs{
     import flash.display.LineScaleMode;
     import flash.display.CapsStyle;
     import flash.display.JointStyle;
+    import kabam.rotmg.core.StaticInjectorContext;
+    import kabam.rotmg.build.api.BuildData;
+    import kabam.rotmg.build.api.BuildEnvironment;
     import flash.text.TextFieldAutoSize;
     import kabam.rotmg.text.view.stringBuilder.LineBuilder;
     import flash.filters.DropShadowFilter;
     import com.company.assembleegameclient.parameters.Parameters;
+    import kabam.rotmg.application.api.ApplicationSetup;
+    import kabam.rotmg.text.view.stringBuilder.StaticStringBuilder;
     import kabam.rotmg.text.model.TextKey;
     import flash.events.MouseEvent;
     import flash.display.Graphics;
-    import kabam.rotmg.core.StaticInjectorContext;
     import kabam.rotmg.appengine.api.AppEngineClient;
     import kabam.rotmg.account.core.Account;
     import kabam.rotmg.dialogs.control.CloseDialogsSignal;
@@ -44,6 +48,7 @@ package com.company.assembleegameclient.ui.dialogs{
         public var rect_:Shape;
         public var textText_:TextFieldDisplayConcrete;
         public var textText2_:TextFieldDisplayConcrete;
+        public var textText3_:TextFieldDisplayConcrete;
         public var offsetX:Number = 0;
         public var offsetY:Number = 20;
         public var stageProxy:StageProxy;
@@ -80,16 +85,24 @@ package com.company.assembleegameclient.ui.dialogs{
 
         private function _makeUIAndAdd():void{
             this.makeButton();
-            this.initText();
-            this.initText2();
-            this.addTextFieldDisplay(this.textText_);
-            this.addTextFieldDisplay(this.textText2_);
+            var _local1:BuildData = StaticInjectorContext.getInjector().getInstance(BuildData);
+            if (_local1.getEnvironment() != BuildEnvironment.PRODUCTION){
+                this.initText3();
+                this.addTextFieldDisplay(this.textText3_);
+            }
+            else {
+                this.initText();
+                this.addTextFieldDisplay(this.textText_);
+                this.initText2();
+                this.addTextFieldDisplay(this.textText2_);
+            };
         }
 
         protected function initText():void{
             this.textText_ = new TextFieldDisplayConcrete().setSize(16).setColor(GREY);
             this.textText_.setTextWidth((this.dialogWidth - (this.textMargin * 2)));
             this.textText_.x = this.textMargin;
+            this.textText_.y = this.textTextYPosition;
             this.textText_.setMultiLine(true).setWordWrap(true).setAutoSize(TextFieldAutoSize.CENTER);
             var _local1:LineBuilder = new LineBuilder().setParams("Legal.tos1");
             _local1.setPrefix('<p align="center">').setPostfix("</p>");
@@ -103,6 +116,7 @@ package com.company.assembleegameclient.ui.dialogs{
             this.textText2_ = new TextFieldDisplayConcrete().setSize(16).setColor(GREY);
             this.textText2_.setTextWidth((this.dialogWidth - (this.textMargin * 2)));
             this.textText2_.x = this.textMargin;
+            this.textText2_.y = ((this.textText_.y + this.textText_.height) + 15);
             this.textText2_.setMultiLine(true).setWordWrap(true).setAutoSize(TextFieldAutoSize.CENTER);
             var _local1 = (('<font color="#7777EE"><a href="' + Parameters.TERMS_OF_USE_URL) + '" target="_blank">');
             var _local2 = (('<font color="#7777EE"><a href="' + Parameters.PRIVACY_POLICY_URL) + '" target="_blank">');
@@ -116,6 +130,22 @@ package com.company.assembleegameclient.ui.dialogs{
             this.textText2_.setHTML(true);
             this.textText2_.mouseEnabled = true;
             this.textText2_.filters = [new DropShadowFilter(0, 0, 0, 1, 6, 6, 1)];
+        }
+
+        protected function initText3():void{
+            this.textText3_ = new TextFieldDisplayConcrete().setSize(16).setColor(GREY);
+            this.textText3_.setTextWidth((this.dialogWidth - (this.textMargin * 2)));
+            this.textText3_.x = this.textMargin;
+            this.textText3_.y = this.textTextYPosition;
+            this.textText3_.setMultiLine(true).setWordWrap(true).setAutoSize(TextFieldAutoSize.CENTER);
+            var _local1:ApplicationSetup = StaticInjectorContext.getInjector().getInstance(ApplicationSetup);
+            var _local2:String = (_local1.getAppEngineUrl(true) + Parameters.USER_GENERATED_CONTENT_TERMS);
+            var _local3 = (((((((("I agree to Kabam's <font color=\"#7777EE\"><a href=\"" + Parameters.TERMS_OF_USE_URL) + '">terms of service</a></font>, ') + '<font color="#7777EE"><a href="') + Parameters.PRIVACY_POLICY_URL) + '">privacy policy</a></font>, and ') + '<font color="#7777EE"><a href="') + _local2) + '">user generated content terms</a></font>.');
+            var _local4:StaticStringBuilder = new StaticStringBuilder(_local3);
+            this.textText3_.setStringBuilder(_local4);
+            this.textText3_.setHTML(true);
+            this.textText3_.mouseEnabled = true;
+            this.textText3_.filters = [new DropShadowFilter(0, 0, 0, 1, 6, 6, 1)];
         }
 
         private function addTextFieldDisplay(_arg1:TextFieldDisplayConcrete):void{
@@ -139,12 +169,7 @@ package com.company.assembleegameclient.ui.dialogs{
         }
 
         private function draw():void{
-            this.drawTitleAndText();
-            this.drawAdditionalUI();
             this.drawButtonsAndBackground();
-        }
-
-        protected function drawAdditionalUI():void{
         }
 
         protected function drawButtonsAndBackground():void{
@@ -175,11 +200,6 @@ package com.company.assembleegameclient.ui.dialogs{
             this.box_.addChild(this.buttonAccept);
             this.buttonAccept.y = _local1;
             this.buttonAccept.x = ((this.dialogWidth / 2) - (this.buttonAccept.width / 2));
-        }
-
-        private function drawTitleAndText():void{
-            this.textText_.y = this.textTextYPosition;
-            this.textText2_.y = ((this.textText_.y + this.textText_.height) + 15);
         }
 
         private function removeButtonsIfAlreadyAdded():void{

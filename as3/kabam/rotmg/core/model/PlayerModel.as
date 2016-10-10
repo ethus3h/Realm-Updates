@@ -176,6 +176,10 @@ package kabam.rotmg.core.model{
             return (this.charList.isAdmin_);
         }
 
+        public function mapEditor():Boolean{
+            return (this.charList.canMapEdit_);
+        }
+
         public function getNews():Vector.<SavedNewsItem>{
             return (this.charList.news_);
         }
@@ -243,6 +247,13 @@ package kabam.rotmg.core.model{
 
         public function setCharacterList(_arg1:SavedCharactersList):void{
             this.charList = _arg1;
+        }
+
+        public function isNewToEditing():Boolean{
+            if (((this.charList) && (!(this.charList.isFirstTimeLogin())))){
+                return (false);
+            };
+            return (true);
         }
 
 

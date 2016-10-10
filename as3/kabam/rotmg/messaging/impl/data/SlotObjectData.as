@@ -17,13 +17,13 @@ package kabam.rotmg.messaging.impl.data{
         public function parseFromInput(_arg1:IDataInput):void{
             this.objectId_ = _arg1.readInt();
             this.slotId_ = _arg1.readUnsignedByte();
-            this.objectType_ = _arg1.readShort();
+            this.objectType_ = _arg1.readInt();
         }
 
         public function writeToOutput(_arg1:IDataOutput):void{
             _arg1.writeInt(this.objectId_);
             _arg1.writeByte(this.slotId_);
-            _arg1.writeShort(this.objectType_);
+            _arg1.writeInt(this.objectType_);
         }
 
         public function toString():String{

@@ -55,6 +55,16 @@ package com.company.assembleegameclient.account.ui{
             return (this.checked_);
         }
 
+        public function setChecked():void{
+            this.checked_ = true;
+            this.redrawCheckBox();
+        }
+
+        public function setUnchecked():void{
+            this.checked_ = false;
+            this.redrawCheckBox();
+        }
+
         public function setError(_arg1:String):void{
             this.errorText_.setStringBuilder(new LineBuilder().setParams(_arg1));
         }

@@ -244,6 +244,9 @@ package kabam.rotmg.messaging.impl{
         public function questRedeem(_arg1:int, _arg2:int, _arg3:int):void{
         }
 
+        public function keyInfoRequest(_arg1:int):void{
+        }
+
 
     }
 }//package kabam.rotmg.messaging.impl

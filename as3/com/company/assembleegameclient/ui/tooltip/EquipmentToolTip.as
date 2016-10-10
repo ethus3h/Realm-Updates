@@ -4,14 +4,19 @@
 //com.company.assembleegameclient.ui.tooltip.EquipmentToolTip
 
 package com.company.assembleegameclient.ui.tooltip{
+    import flash.utils.Dictionary;
     import flash.display.Bitmap;
     import kabam.rotmg.text.view.TextFieldDisplayConcrete;
     import com.company.assembleegameclient.ui.LineBreakDesign;
     import com.company.assembleegameclient.objects.Player;
     import __AS3__.vec.Vector;
+    import com.company.assembleegameclient.game.events.KeyInfoResponseSignal;
+    import kabam.rotmg.ui.model.HUDModel;
     import com.company.assembleegameclient.objects.ObjectLibrary;
+    import kabam.rotmg.core.StaticInjectorContext;
     import kabam.rotmg.text.view.stringBuilder.StaticStringBuilder;
     import flash.filters.DropShadowFilter;
+    import kabam.rotmg.messaging.impl.incoming.KeyInfoResponse;
     import kabam.rotmg.text.view.stringBuilder.AppendingLineBuilder;
     import kabam.rotmg.text.model.TextKey;
     import flash.display.BitmapData;
@@ -30,6 +35,8 @@ package com.company.assembleegameclient.ui.tooltip{
 
         private static const MAX_WIDTH:int = 230;
 
+        public static var keyInfo:Dictionary = new Dictionary();
+
         private var icon:Bitmap;
         public var titleText:TextFieldDisplayConcrete;
         private var tierText:TextFieldDisplayConcrete;
@@ -41,6 +48,8 @@ package com.company.assembleegameclient.ui.tooltip{
         private var player:Player;
         private var isEquippable:Boolean = false;
         private var objectType:int;
+        private var titleOverride:String;
+        private var descriptionOverride:String;
         private var curItemXML:XML = null;
         private var objectXML:XML = null;
         private var slotTypeToTextBuilder:SlotComparisonFactory;
@@ -55,21 +64,28 @@ package com.company.assembleegameclient.ui.tooltip{
         private var playerCanUse:Boolean;
         private var comparisonResults:SlotComparisonResult;
         private var powerText:TextFieldDisplayConcrete;
+        private var keyInfoResponse:KeyInfoResponseSignal;
+        private var originalObjectType:int;
 
         public function EquipmentToolTip(_arg1:int, _arg2:Player, _arg3:int, _arg4:String){
+            var _local8:HUDModel;
             this.uniqueEffects = new Vector.<Effect>();
             this.objectType = _arg1;
+            this.originalObjectType = this.objectType;
             this.player = _arg2;
             this.invType = _arg3;
             this.inventoryOwnerType = _arg4;
             this.isInventoryFull = ((_arg2) ? _arg2.isInventoryFull() : false);
-            this.playerCanUse = ((_arg2) ? ObjectLibrary.isUsableByPlayer(_arg1, _arg2) : false);
-            var _local5:int = ((_arg2) ? ObjectLibrary.getMatchingSlotIndex(_arg1, _arg2) : -1);
+            if ((((this.objectType >= 0x9000)) && ((this.objectType <= 0xFFFF)))){
+                this.objectType = 36863;
+            };
+            this.playerCanUse = ((_arg2) ? ObjectLibrary.isUsableByPlayer(this.objectType, _arg2) : false);
+            var _local5:int = ((_arg2) ? ObjectLibrary.getMatchingSlotIndex(this.objectType, _arg2) : -1);
             var _local6:uint = ((((this.playerCanUse) || ((this.player == null)))) ? 0x363636 : 6036765);
             var _local7:uint = ((((this.playerCanUse) || ((_arg2 == null)))) ? 0x9B9B9B : 10965039);
             super(_local6, 1, _local7, 1, true);
             this.slotTypeToTextBuilder = new SlotComparisonFactory();
-            this.objectXML = ObjectLibrary.xmlLibrary_[_arg1];
+            this.objectXML = ObjectLibrary.xmlLibrary_[this.objectType];
             this.isEquippable = !((_local5 == -1));
             this.effects = new Vector.<Effect>();
             this.itemSlotTypeId = int(this.objectXML.SlotType);
@@ -84,9 +100,27 @@ package com.company.assembleegameclient.ui.tooltip{
                 };
             };
             this.addIcon();
-            this.addTitle();
+            if ((((this.originalObjectType >= 0x9000)) && ((this.originalObjectType <= 0xFFFF)))){
+                if (keyInfo[this.originalObjectType] == null){
+                    this.addTitle();
+                    this.addDescriptionText();
+                    this.keyInfoResponse = StaticInjectorContext.getInjector().getInstance(KeyInfoResponseSignal);
+                    this.keyInfoResponse.add(this.onKeyInfoResponse);
+                    _local8 = StaticInjectorContext.getInjector().getInstance(HUDModel);
+                    _local8.gameSprite.gsc_.keyInfoRequest(this.originalObjectType);
+                }
+                else {
+                    this.titleOverride = (keyInfo[this.originalObjectType][0] + " Key");
+                    this.descriptionOverride = (((keyInfo[this.originalObjectType][1] + "\n") + "Created By: ") + keyInfo[this.originalObjectType][2]);
+                    this.addTitle();
+                    this.addDescriptionText();
+                };
+            }
+            else {
+                this.addTitle();
+                this.addDescriptionText();
+            };
             this.addTierText();
-            this.addDescriptionText();
             this.handleWisMod();
             this.buildCategorySpecificText();
             this.addUniqueEffectsToList();
@@ -114,6 +148,17 @@ package com.company.assembleegameclient.ui.tooltip{
                 waiter.push(this.powerText.textChanged);
                 addChild(this.powerText);
             };
+        }
+
+        private function onKeyInfoResponse(_arg1:KeyInfoResponse):void{
+            this.keyInfoResponse.remove(this.onKeyInfoResponse);
+            this.removeTitle();
+            this.removeDesc();
+            this.titleOverride = _arg1.name;
+            this.descriptionOverride = _arg1.description;
+            keyInfo[this.originalObjectType] = [_arg1.name, _arg1.description, _arg1.creator];
+            this.addTitle();
+            this.addDescriptionText();
         }
 
         private function addUniqueEffectsToList():void{
@@ -191,10 +236,23 @@ package com.company.assembleegameclient.ui.tooltip{
             return ((activateTags.length() >= 1));
         }
 
+        private function removeTitle(){
+            removeChild(this.titleText);
+        }
+
+        private function removeDesc(){
+            removeChild(this.descText);
+        }
+
         private function addTitle():void{
             var _local1:int = ((((this.playerCanUse) || ((this.player == null)))) ? 0xFFFFFF : 16549442);
             this.titleText = new TextFieldDisplayConcrete().setSize(16).setColor(_local1).setBold(true).setTextWidth((((MAX_WIDTH - this.icon.width) - 4) - 30)).setWordWrap(true);
-            this.titleText.setStringBuilder(new LineBuilder().setParams(ObjectLibrary.typeToDisplayId_[this.objectType]));
+            if (this.titleOverride){
+                this.titleText.setStringBuilder(new StaticStringBuilder(this.titleOverride));
+            }
+            else {
+                this.titleText.setStringBuilder(new LineBuilder().setParams(ObjectLibrary.typeToDisplayId_[this.objectType]));
+            };
             this.titleText.filters = [new DropShadowFilter(0, 0, 0, 0.5, 12, 12)];
             waiter.push(this.titleText.textChanged);
             addChild(this.titleText);
@@ -743,7 +801,12 @@ package com.company.assembleegameclient.ui.tooltip{
 
         private function addDescriptionText():void{
             this.descText = new TextFieldDisplayConcrete().setSize(14).setColor(0xB3B3B3).setTextWidth(MAX_WIDTH).setWordWrap(true);
-            this.descText.setStringBuilder(new LineBuilder().setParams(String(this.objectXML.Description)));
+            if (this.descriptionOverride){
+                this.descText.setStringBuilder(new StaticStringBuilder(this.descriptionOverride));
+            }
+            else {
+                this.descText.setStringBuilder(new LineBuilder().setParams(String(this.objectXML.Description)));
+            };
             this.descText.filters = [new DropShadowFilter(0, 0, 0, 0.5, 12, 12)];
             waiter.push(this.descText.textChanged);
             addChild(this.descText);

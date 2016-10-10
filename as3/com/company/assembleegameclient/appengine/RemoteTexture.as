@@ -34,7 +34,7 @@ package com.company.assembleegameclient.appengine{
         }
 
         public function run():void{
-            var _local1:String = (((this.instance_)=="testing") ? "rotmgtesting.appspot.com" : "realmofthemadgod.appspot.com");
+            var _local1:String = (((this.instance_)=="testing") ? "rotmghrdtesting.appspot.com" : "realmofthemadgodhrd.appspot.com");
             var _local2:String = URL_PATTERN.replace("{DOMAIN}", _local1);
             var _local3:Object = {};
             _local3.id = this.id_;

@@ -72,7 +72,9 @@ package com.company.assembleegameclient.editor{
             var _local5:CommandMenuItem = new CommandMenuItem(_arg1, _arg3, _arg4);
             _local5.y = this.yOffset_;
             addChild(_local5);
-            this.keyCodeDict_[_arg2] = _local5;
+            if (_arg2 != -1){
+                this.keyCodeDict_[_arg2] = _local5;
+            };
             if (this.selected_ == null){
                 this.setSelected(_local5);
             };

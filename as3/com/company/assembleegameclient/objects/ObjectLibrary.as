@@ -32,6 +32,9 @@ package com.company.assembleegameclient.objects{
         public static const typeToAnimationsData_:Dictionary = new Dictionary();
         public static const petXMLDataLibrary_:Dictionary = new Dictionary();
         public static const skinSetXMLDataLibrary_:Dictionary = new Dictionary();
+        public static const dungeonsXMLLibrary_:Dictionary = new Dictionary(true);
+        public static const ENEMY_FILTER_LIST:Vector.<String> = new <String>["None", "Hp", "Defense"];
+        public static const TILE_FILTER_LIST:Vector.<String> = new <String>["ALL", "Walkable", "Unwalkable", "Slow", "Speed=1"];
         public static const defaultProps_:ObjectProperties = new ObjectProperties(null);
         public static const TYPE_MAP:Object = {
             ArenaGuard:ArenaGuard,
@@ -75,56 +78,75 @@ package com.company.assembleegameclient.objects{
         public static var playerChars_:Vector.<XML> = new Vector.<XML>();
         public static var hexTransforms_:Vector.<XML> = new Vector.<XML>();
         public static var playerClassAbbr_:Dictionary = new Dictionary();
+        private static var currentDungeon:String = "";
 
 
-        public static function parseFromXML(_arg1:XML):void{
-            var _local2:XML;
-            var _local3:String;
+        public static function parseDungeonXML(_arg1:String, _arg2:XML):void{
+            var _local3:int = (_arg1.indexOf("_") + 1);
+            var _local4:int = _arg1.indexOf("CXML");
+            currentDungeon = _arg1.substr(_local3, (_local4 - _local3));
+            dungeonsXMLLibrary_[currentDungeon] = new Dictionary(true);
+            parseFromXML(_arg2, parseDungeonCallbak);
+        }
+
+        private static function parseDungeonCallbak(_arg1:int, _arg2:XML){
+            if (((!((currentDungeon == ""))) && (!((dungeonsXMLLibrary_[currentDungeon] == null))))){
+                dungeonsXMLLibrary_[currentDungeon][_arg1] = _arg2;
+                propsLibrary_[_arg1].belonedDungeon = currentDungeon;
+            };
+        }
+
+        public static function parseFromXML(_arg1:XML, _arg2:Function=null):void{
+            var _local3:XML;
             var _local4:String;
-            var _local5:int;
-            var _local6:Boolean;
-            var _local7:int;
-            for each (_local2 in _arg1.Object) {
-                _local3 = String(_local2.@id);
-                _local4 = _local3;
-                if (_local2.hasOwnProperty("DisplayId")){
-                    _local4 = _local2.DisplayId;
+            var _local5:String;
+            var _local6:int;
+            var _local7:Boolean;
+            var _local8:int;
+            for each (_local3 in _arg1.Object) {
+                _local4 = String(_local3.@id);
+                _local5 = _local4;
+                if (_local3.hasOwnProperty("DisplayId")){
+                    _local5 = _local3.DisplayId;
                 };
-                if (_local2.hasOwnProperty("Group")){
-                    if (_local2.Group == "Hexable"){
-                        hexTransforms_.push(_local2);
+                if (_local3.hasOwnProperty("Group")){
+                    if (_local3.Group == "Hexable"){
+                        hexTransforms_.push(_local3);
                     };
                 };
-                _local5 = int(_local2.@type);
-                if (((_local2.hasOwnProperty("PetBehavior")) || (_local2.hasOwnProperty("PetAbility")))){
-                    petXMLDataLibrary_[_local5] = _local2;
+                _local6 = int(_local3.@type);
+                if (((_local3.hasOwnProperty("PetBehavior")) || (_local3.hasOwnProperty("PetAbility")))){
+                    petXMLDataLibrary_[_local6] = _local3;
                 }
                 else {
-                    propsLibrary_[_local5] = new ObjectProperties(_local2);
-                    xmlLibrary_[_local5] = _local2;
-                    idToType_[_local3] = _local5;
-                    typeToDisplayId_[_local5] = _local4;
-                    if (String(_local2.Class) == "Player"){
-                        playerClassAbbr_[_local5] = String(_local2.@id).substr(0, 2);
-                        _local6 = false;
-                        _local7 = 0;
-                        while (_local7 < playerChars_.length) {
-                            if (int(playerChars_[_local7].@type) == _local5){
-                                playerChars_[_local7] = _local2;
-                                _local6 = true;
+                    propsLibrary_[_local6] = new ObjectProperties(_local3);
+                    xmlLibrary_[_local6] = _local3;
+                    idToType_[_local4] = _local6;
+                    typeToDisplayId_[_local6] = _local5;
+                    if (_arg2 != null){
+                        (_arg2(_local6, _local3));
+                    };
+                    if (String(_local3.Class) == "Player"){
+                        playerClassAbbr_[_local6] = String(_local3.@id).substr(0, 2);
+                        _local7 = false;
+                        _local8 = 0;
+                        while (_local8 < playerChars_.length) {
+                            if (int(playerChars_[_local8].@type) == _local6){
+                                playerChars_[_local8] = _local3;
+                                _local7 = true;
                             };
-                            _local7++;
+                            _local8++;
                         };
-                        if (!_local6){
-                            playerChars_.push(_local2);
+                        if (!_local7){
+                            playerChars_.push(_local3);
                         };
                     };
-                    typeToTextureData_[_local5] = textureDataFactory.create(_local2);
-                    if (_local2.hasOwnProperty("Top")){
-                        typeToTopTextureData_[_local5] = textureDataFactory.create(XML(_local2.Top));
+                    typeToTextureData_[_local6] = textureDataFactory.create(_local3);
+                    if (_local3.hasOwnProperty("Top")){
+                        typeToTopTextureData_[_local6] = textureDataFactory.create(XML(_local3.Top));
                     };
-                    if (_local2.hasOwnProperty("Animation")){
-                        typeToAnimationsData_[_local5] = new AnimationsData(_local2);
+                    if (_local3.hasOwnProperty("Animation")){
+                        typeToAnimationsData_[_local6] = new AnimationsData(_local3);
                     };
                 };
             };
@@ -246,7 +268,7 @@ package com.company.assembleegameclient.objects{
         }
 
         public static function isUsableByPlayer(_arg1:int, _arg2:Player):Boolean{
-            if (_arg2 == null){
+            if ((((_arg2 == null)) || ((_arg2.slotTypes_ == null)))){
                 return (true);
             };
             var _local3:XML = xmlLibrary_[_arg1];

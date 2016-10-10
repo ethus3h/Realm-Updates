@@ -159,7 +159,9 @@ package kabam.rotmg.game.view{
         }
 
         private function onClosed():void{
-            this.gameClosed.dispatch();
+            if (!this.view.isEditor){
+                this.gameClosed.dispatch();
+            };
             this.closeDialogs.dispatch();
             var _local1:HideMapLoadingSignal = StaticInjectorContext.getInjector().getInstance(HideMapLoadingSignal);
             _local1.dispatch();

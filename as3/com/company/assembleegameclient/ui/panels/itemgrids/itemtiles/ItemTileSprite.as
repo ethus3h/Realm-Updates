@@ -44,20 +44,24 @@ package com.company.assembleegameclient.ui.panels.itemgrids.itemtiles{
         }
 
         public function drawTile():void{
-            var _local1:BitmapData;
-            var _local2:XML;
-            var _local3:BitmapData;
-            if (this.itemId != ItemConstants.NO_ITEM){
-                _local1 = ObjectLibrary.getRedrawnTextureFromType(this.itemId, 80, true);
-                _local2 = ObjectLibrary.xmlLibrary_[this.itemId];
-                if (((((_local2) && (_local2.hasOwnProperty("Doses")))) && (this.bitmapFactory))){
-                    _local1 = _local1.clone();
-                    _local3 = this.bitmapFactory.make(new StaticStringBuilder(String(_local2.Doses)), 12, 0xFFFFFF, false, IDENTITY_MATRIX, false);
-                    _local1.draw(_local3, DOSE_MATRIX);
+            var _local2:BitmapData;
+            var _local3:XML;
+            var _local4:BitmapData;
+            var _local1:int = this.itemId;
+            if (_local1 != ItemConstants.NO_ITEM){
+                if (_local1 >= 0x9000){
+                    _local1 = 36863;
                 };
-                this.itemBitmap.bitmapData = _local1;
-                this.itemBitmap.x = (-(_local1.width) / 2);
-                this.itemBitmap.y = (-(_local1.height) / 2);
+                _local2 = ObjectLibrary.getRedrawnTextureFromType(_local1, 80, true);
+                _local3 = ObjectLibrary.xmlLibrary_[_local1];
+                if (((((_local3) && (_local3.hasOwnProperty("Doses")))) && (this.bitmapFactory))){
+                    _local2 = _local2.clone();
+                    _local4 = this.bitmapFactory.make(new StaticStringBuilder(String(_local3.Doses)), 12, 0xFFFFFF, false, IDENTITY_MATRIX, false);
+                    _local2.draw(_local4, DOSE_MATRIX);
+                };
+                this.itemBitmap.bitmapData = _local2;
+                this.itemBitmap.x = (-(_local2.width) / 2);
+                this.itemBitmap.y = (-(_local2.height) / 2);
                 visible = true;
             }
             else {

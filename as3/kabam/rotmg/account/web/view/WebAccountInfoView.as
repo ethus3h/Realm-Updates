@@ -18,7 +18,6 @@ package kabam.rotmg.account.web.view{
     import flash.display.DisplayObject;
     import kabam.rotmg.core.StaticInjectorContext;
     import kabam.rotmg.build.api.BuildData;
-    import kabam.rotmg.build.api.BuildEnvironment;
     import kabam.rotmg.account.core.view.*;
 
     public class WebAccountInfoView extends Sprite implements AccountInfoView {
@@ -128,12 +127,7 @@ package kabam.rotmg.account.web.view{
             this.accountText.setStringBuilder(new LineBuilder().setParams(TextKey.LOGGED_IN_TEXT, {userName:this.userName}));
             var _local1:BuildData = StaticInjectorContext.getInjector().getInstance(BuildData);
             this.loginButton.setTextKey(TextKey.LOG_OUT);
-            if ((((_local1.getEnvironment() == BuildEnvironment.TESTING)) || ((_local1.getEnvironment() == BuildEnvironment.LOCALHOST)))){
-                this.addAndAlignHorizontally(this.accountText, this.makeDividerText(), this.resetButton, this.makeDividerText(), this.loginButton);
-            }
-            else {
-                this.addAndAlignHorizontally(this.accountText, this.loginButton);
-            };
+            this.addAndAlignHorizontally(this.accountText, this.loginButton);
         }
 
         private function showUIForGuestAccount():void{
