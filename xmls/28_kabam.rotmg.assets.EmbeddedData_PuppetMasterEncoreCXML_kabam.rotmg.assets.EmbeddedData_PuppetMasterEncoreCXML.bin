@@ -43,7 +43,7 @@
       </Projectile>
       <Projectile id="1">
          <ObjectId>Puppet Green Wheel</ObjectId>
-         <Speed>90</Speed>
+         <Speed>85</Speed>
          <Damage>70</Damage>
          <Size>100</Size>
          <LifetimeMS>1800</LifetimeMS>
@@ -330,7 +330,7 @@
       <Enemy/>
       <AnimatedTexture>
          <File>d3Chars8x8rEmbed</File>
-         <Index>0x06</Index>
+         <Index>0x07</Index>
       </AnimatedTexture>
       <Size>120</Size>
       <ShadowSize>90</ShadowSize>

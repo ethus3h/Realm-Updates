@@ -980,6 +980,17 @@
       <NoSkinSelect/>
       <DisplayId>{skins.Mini_Thessal}</DisplayId>
    </Object>
+   <Object type="0x09d9" id="Slurp Knight">
+      <Skin/>
+      <Class>Skin</Class>
+      <AnimatedTexture>
+         <File>playerskins</File>
+         <Index>107</Index>
+      </AnimatedTexture>
+      <PlayerClassType>0x031e</PlayerClassType>
+      <NoSkinSelect/>
+      <DisplayId>{skins.Slurp_Knight}</DisplayId>
+   </Object>
    <Object type="0x0401" id="Oryx Set Skin">
       <Skin/>
       <Class>Skin</Class>

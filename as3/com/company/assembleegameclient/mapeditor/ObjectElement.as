@@ -6,10 +6,10 @@
 package com.company.assembleegameclient.mapeditor{
     import com.company.assembleegameclient.mapeditor.Element;
     import com.company.assembleegameclient.objects.animation.Animations;
-    import flash.display.Bitmap;
     import flash.display.BitmapData;
     import com.company.assembleegameclient.objects.ObjectLibrary;
     import com.company.assembleegameclient.objects.animation.AnimationsData;
+    import flash.display.Bitmap;
     import com.company.assembleegameclient.mapeditor.ObjectTypeToolTip;
     import com.company.assembleegameclient.ui.tooltip.ToolTip;
     import com.company.assembleegameclient.mapeditor.*;
@@ -20,7 +20,6 @@ package com.company.assembleegameclient.mapeditor{
 
         public function ObjectElement(_arg1:XML){
             var _local3:Animations;
-            var _local5:Bitmap;
             var _local7:BitmapData;
             super(int(_arg1.@type));
             this.objXML_ = _arg1;
@@ -33,7 +32,7 @@ package com.company.assembleegameclient.mapeditor{
                     _local2 = _local7;
                 };
             };
-            _local5 = new Bitmap(_local2);
+            var _local5:Bitmap = new Bitmap(_local2);
             var _local6:Number = ((WIDTH - 4) / Math.max(_local5.width, _local5.height));
             _local5.scaleX = (_local5.scaleY = _local6);
             _local5.x = ((WIDTH / 2) - (_local5.width / 2));

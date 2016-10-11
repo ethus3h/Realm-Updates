@@ -3094,7 +3094,7 @@
          <Index>0x15a</Index>
       </Texture>
       <SlotType>10</SlotType>
-      <Description>{pets.Customize_your_pet_with_the_Marid_Skin}</Description>
+      <Description>{pets.Customize_your_pet_with_the_Marid_Skin._The_appearance_chang}</Description>
       <Activate skinId="24832">PetSkin</Activate>
       <Consumable/>
       <Soulbound/>
@@ -3108,7 +3108,7 @@
          <File>lofiObj2</File>
          <Index>0x15a</Index>
       </Texture>
-      <Family>? ? ? ?</Family>
+      <Family>Unknown</Family>
       <Rarity>Divine</Rarity>
       <DefaultSkin>Jaco Skin</DefaultSkin>
       <Size>80</Size>
@@ -3127,11 +3127,11 @@
       <Class>Equipment</Class>
       <Item/>
       <Texture>
-         <File>lofiObj2</File>
-         <Index>0x15a</Index>
+         <File>lofiObj3</File>
+         <Index>0x599</Index>
       </Texture>
       <SlotType>10</SlotType>
-      <Description>{pets.Customize_your_pet_with_the_Jaco_Skin}</Description>
+      <Description>{pets.Customize_your_pet_with_the_Jaco_Skin._The_appearance_change}</Description>
       <Activate skinId="24841">PetSkin</Activate>
       <Consumable/>
       <Soulbound/>

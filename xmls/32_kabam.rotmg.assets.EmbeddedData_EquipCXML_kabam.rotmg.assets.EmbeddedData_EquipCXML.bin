@@ -4177,6 +4177,22 @@
       <feedPower>5000</feedPower>
       <DisplayId>{equip.Mini_Thessal_Skin}</DisplayId>
    </Object>
+   <Object type="0x2588" id="Slurp Knight Skin">
+      <Class>Equipment</Class>
+      <Item/>
+      <AnimatedTexture>
+         <File>playerskins</File>
+         <Index>107</Index>
+      </AnimatedTexture>
+      <SlotType>10</SlotType>
+      <Description>{equip.Customize_your_Knight_with_the_Slurp_Knight_Skin.}</Description>
+      <Activate skinType="2521">UnlockSkin</Activate>
+      <Consumable/>
+      <Soulbound/>
+      <BagType>4</BagType>
+      <feedPower>5000</feedPower>
+      <DisplayId>{equip.Slurp_Knight_Skin}</DisplayId>
+   </Object>
    <Object type="0xab0" id="Minor Health Potion">
       <Class>Equipment</Class>
       <Item/>
@@ -14248,7 +14264,7 @@
       <Consumable/>
       <Soulbound/>
       <Activate id="Puppet Encore Portal">Create</Activate>
-      <feedPower>200</feedPower>
+      <feedPower>350</feedPower>
       <DisplayId>{equip.Puppet_MasterAPOSs_Encore_Key}</DisplayId>
    </Object>
    <Object type="0x766" id="Staff of Esben">
@@ -15079,6 +15095,7 @@
       <Consumable/>
       <Soulbound/>
       <Activate id="Toxic Sewers Portal">Create</Activate>
+      <feedPower>260</feedPower>
    </Object>
    <Object type="0x11b" id="The Hive Key">
       <Class>Equipment</Class>
@@ -15094,6 +15111,7 @@
       <Consumable/>
       <Soulbound/>
       <Activate id="The Hive Portal">Create</Activate>
+      <feedPower>145</feedPower>
    </Object>
    <Object type="0x11c" id="TH Honey bottle">
       <DisplayId>{equip.TH_Honey_bottle}</DisplayId>

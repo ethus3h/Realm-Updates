@@ -18,7 +18,7 @@ package com.company.assembleegameclient.parameters{
     public class Parameters {
 
         public static const BUILD_VERSION:String = "27.7";
-        public static const MINOR_VERSION:String = "X5.0";
+        public static const MINOR_VERSION:String = "X6.0";
         public static const ENABLE_ENCRYPTION:Boolean = true;
         public static const PORT:int = 2050;
         public static const ALLOW_SCREENSHOT_MODE:Boolean = false;
